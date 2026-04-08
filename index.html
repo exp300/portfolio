@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex — Builder & Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a08;
+    --surface: #111110;
+    --border: #222220;
+    --text: #e8e6df;
+    --muted: #6b6a63;
+    --accent: #d4911a;
+    --accent-dim: #2a1e08;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--text); }
+
+  nav .links { display: flex; gap: 2rem; }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 0 4rem;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a08;
+    font-weight: 500;
+  }
+
+  .btn-primary:hover { background: #e8a520; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--muted);
+    color: var(--text);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 3rem 0;
+  }
+
+  /* STACK */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .stack-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .tag.highlight {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* PROJECT */
+  .project {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .project:hover {
+    border-color: #333330;
+  }
+
+  .project:hover::before {
+    opacity: 1;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+  }
+
+  .project-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .project-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .status-live {
+    background: #0d2a14;
+    color: #4ade80;
+    border: 1px solid #1a4726;
+  }
+
+  .project-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .project-tech {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .project-tech span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding: 0.2rem 0.5rem;
+    background: var(--surface);
+    border-radius: 2px;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .project-links a {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: opacity 0.15s;
+  }
+
+  .project-links a:hover { opacity: 0.7; }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 560px) {
+    .about-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2.5rem; }
+    .project-header { flex-direction: column; }
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+
+  .about-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 4rem 0 6rem;
+    text-align: center;
+  }
+
+  .contact-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-section p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  .contact-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero > * {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero > *:nth-child(4) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<div class="container">
+  <nav>
+    <a href="#" class="logo">Alex<span>.</span></a>
+    <div class="links">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Available for work</div>
+    <h1>I build <em>AI-powered</em> products that ship.</h1>
+    <p class="hero-sub">
+      Full-stack developer focused on AI integrations and SaaS. I take ideas from zero to deployed — fast. Based in Argentina, working globally.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Get in touch →</a>
+      <a href="https://github.com/exp300" class="btn btn-outline" target="_blank">GitHub</a>
+      <a href="mailto:exp300@gmail.com" class="btn btn-primary">exp300@gmail.com</a>
+
+  <div class="divider"></div>
+
+  <!-- STACK -->
+  <div class="section-label">Stack</div>
+  <div class="stack-row">
+    <span class="tag highlight">React</span>
+    <span class="tag highlight">Node.js</span>
+    <span class="tag highlight">Claude API</span>
+    <span class="tag highlight">Stripe</span>
+    <span class="tag">Express</span>
+    <span class="tag">SQLite</span>
+    <span class="tag">JWT Auth</span>
+    <span class="tag">Railway</span>
+    <span class="tag">Vite</span>
+    <span class="tag">Tailwind CSS</span>
+    <span class="tag">REST APIs</span>
+    <span class="tag">PDF parsing</span>
+  </div>
+
+  <!-- WORK -->
+  <div id="work" style="margin-bottom: 1.25rem;">
+    <div class="section-label">Projects</div>
+  </div>
+
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">ScopeGuard 🛡️</span>
+      <span class="project-status status-live">● Live</span>
+    </div>
+    <p class="project-desc">
+      AI-powered scope creep detector for freelancers. Upload your contract, paste a client message — Claude instantly tells you if the request is IN scope, OUT of scope, or AMBIGUOUS, with the exact clause cited and a ready-to-send professional reply. Built with Stripe subscriptions and full auth.
+    </p>
+    <div class="project-footer">
+      <div class="project-tech">
+        <span>React 18</span>
+        <span>Node.js</span>
+        <span>Claude API</span>
+        <span>Stripe</span>
+        <span>SQLite</span>
+        <span>Railway</span>
+      </div>
+      <div class="project-links">
+        <a href="https://scopeguard-production-a7ef.up.railway.app/" target="_blank">Live demo ↗</a>
+        <a href="https://github.com/exp300/scopeguard" target="_blank">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <div id="about" style="margin-bottom: 1.25rem;">
+    <div class="section-label">About</div>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>What I do</h3>
+      <p>I build full-stack web apps with AI integrations — from idea to deployed product. Fast. I'm comfortable across the whole stack: React frontends, Node.js backends, LLM APIs, payments, auth.</p>
+    </div>
+    <div class="about-card">
+      <h3>How I work</h3>
+      <p>I move fast, ship real things, and figure out hard problems. I've built and deployed products solo — from database schema to Stripe webhooks to production deployment.</p>
+    </div>
+    <div class="about-card">
+      <h3>What I'm looking for</h3>
+      <p>Startups that need a developer who can own features end-to-end. I want to work on something interesting with people who care about what they're building.</p>
+    </div>
+    <div class="about-card">
+      <h3>Location</h3>
+      <p>Based in Argentina. Available for remote work globally. Comfortable with async communication across timezones.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <h2>Let's build something.</h2>
+    <p>Open to freelance, part-time, or full-time roles. Drop me a message.</p>
+    <div class="contact-row">
+      <a href="mailto:exp300@gmail.com" class="btn btn-primary">exp300@gmail.com</a>
+      <a href="https://github.com/exp300" class="btn btn-outline" target="_blank">GitHub</a>
+    </div>
+  </section>
+
+  <foot
